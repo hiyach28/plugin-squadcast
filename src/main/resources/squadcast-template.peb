@@ -18,7 +18,18 @@
 {% endfor %}
         },
 {% endif %}
-     "description": "{{ title(link, execution) }}\nFinal task ID: {{lastTask.taskId}}\nStatus: {% if firstFailed == false %}Succeeded{% else %}Failed on task `{{firstFailed.taskId}}`{% endif %}\nDuration: {{duration}}"
+     "description": {% filter toJson %}{{ title(link, execution) }}
+Final task ID: {{lastTask.taskId}}
+Status: {% if firstFailed == false %}Succeeded{% else %}Failed on task `{{firstFailed.taskId}}`{% endif %}
+Duration: {{duration}}
+{%- if customMessage is defined and customMessage is not empty %}
+Message: {{ customMessage }}
+{%- endif %}
+{%- if customFields is defined and customFields is not empty %}
+{%- for entry in customFields %}
+{{ entry.key }}: {{ entry.value }}
+{%- endfor %}
+{%- endif %}{% endfilter %}
 {% if eventId is defined %}
     ,"event_id": "{{eventId}}"
 {% endif %}
